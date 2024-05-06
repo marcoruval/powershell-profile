@@ -37,7 +37,7 @@ if (!(Test-Path -Path $PROFILE -PathType Leaf)) {
             New-Item -Path $profilePath -ItemType "directory"
         }
 
-        Invoke-RestMethod https://github.com/ChrisTitusTech/powershell-profile/raw/main/Microsoft.PowerShell_profile.ps1 -OutFile $PROFILE
+        Invoke-RestMethod https://github.com/marcoruval/powershell-profile/raw/main/Microsoft.PowerShell_profile.ps1 -OutFile $PROFILE
         Write-Host "The profile @ [$PROFILE] has been created."
         Write-Host "If you want to add any persistent components, please do so at [$profilePath\Profile.ps1] as there is an updater in the installed profile which uses the hash to update the profile and will lead to loss of changes"
     }
@@ -48,7 +48,7 @@ if (!(Test-Path -Path $PROFILE -PathType Leaf)) {
 else {
     try {
         Get-Item -Path $PROFILE | Move-Item -Destination "oldprofile.ps1" -Force
-        Invoke-RestMethod https://github.com/ChrisTitusTech/powershell-profile/raw/main/Microsoft.PowerShell_profile.ps1 -OutFile $PROFILE
+        Invoke-RestMethod https://github.com/marcoruval/powershell-profile/raw/main/Microsoft.PowerShell_profile.ps1 -OutFile $PROFILE
         Write-Host "The profile @ [$PROFILE] has been created and old profile removed."
         Write-Host "Please back up any persistent components of your old profile to [$HOME\Documents\PowerShell\Profile.ps1] as there is an updater in the installed profile which uses the hash to update the profile and will lead to loss of changes"
     }
@@ -101,26 +101,10 @@ if ((Test-Path -Path $PROFILE) -and (winget list --name "OhMyPosh" -e) -and ($fo
     Write-Warning "Setup completed with errors. Please check the error messages above."
 }
 
-# Choco install
-try {
-    Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
-}
-catch {
-    Write-Error "Failed to install Chocolatey. Error: $_"
-}
-
 # Terminal Icons Install
 try {
     Install-Module -Name Terminal-Icons -Repository PSGallery -Force
 }
 catch {
     Write-Error "Failed to install Terminal Icons module. Error: $_"
-}
-# zoxide Install
-try {
-    winget install -e --id ajeetdsouza.zoxide
-    Write-Host "zoxide installed successfully."
-}
-catch {
-    Write-Error "Failed to install zoxide. Error: $_"
 }
